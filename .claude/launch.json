@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nivel3-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "nivel3/frontend", "run", "dev", "--", "--port", "8030"],
+      "port": 8030
+    },
+    {
+      "name": "nivel3-backend",
+      "runtimeExecutable": "nivel3/backend/.venv/Scripts/python.exe",
+      "runtimeArgs": ["-m", "uvicorn", "main:app", "--reload", "--port", "8040", "--app-dir", "nivel3/backend"],
+      "port": 8040
+    }
+  ]
+}

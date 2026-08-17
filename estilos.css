@@ -1,0 +1,500 @@
+/* =========================================
+   VARIABLES DE COLOR
+   Paleta de la pokébola: rojo, blanco, negro
+   + dorado como acento (nada de morados/rosas)
+   ========================================= */
+
+:root {
+  --negro: #0b0b0c;
+  --negro-2: #17161a;
+  --negro-3: #201e22;
+  --rojo: #ee1c1c;
+  --rojo-oscuro: #8f0f0f;
+  --rojo-brillo: #ff4b3e;
+  --dorado: #ffcb05;
+  --dorado-suave: #ffe185;
+  --blanco: #f6f4ee;
+  --texto: #f3ede0;
+  --texto-tenue: #b9ab8c;
+  --borde: rgba(255, 203, 5, 0.45);
+  --borde-suave: rgba(255, 203, 5, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Manrope', sans-serif;
+  color: var(--texto);
+  overflow-x: hidden;
+
+  /* Sin degradados ni colores de fondo: solo el video (o negro si no carga) */
+  background: #000;
+}
+
+
+/* =========================================
+   VIDEO DE FONDO — es lo único que se ve
+   detrás del contenido, sin capas de color
+   ========================================= */
+
+.video-fondo {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+
+/* =========================================
+   DECORACIONES FLOTANTES (pokémones/gifs opcionales)
+   ========================================= */
+
+.flotante {
+  position: fixed;
+  width: 90px;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 14px rgba(255, 203, 5, 0.35));
+  animation: flotar 6s ease-in-out infinite;
+}
+
+.flotante-1 { top: 8%; left: 6%; }
+.flotante-2 { top: 65%; right: 8%; animation-delay: 1.5s; }
+.flotante-3 { bottom: 6%; left: 12%; animation-delay: 3s; }
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-18px); }
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   Ya no hay tarjeta/panel: el encabezado y el
+   buscador flotan directo sobre el video.
+   ========================================= */
+
+.contenedor {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+
+/* =========================================
+   ENCABEZADO (pokébola + título)
+   ========================================= */
+
+.encabezado {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+/* Hueco reservado para la pokébola giratoria.
+   Si agregas assets/pokebola-personalizada.gif (o .png),
+   se muestra encima de ésta y también gira, porque hereda
+   la misma animación del contenedor. */
+.pokebola-icono {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--negro) 0%, var(--negro) 46%, var(--dorado) 46%, var(--dorado) 54%, var(--blanco) 54%);
+  border: 3px solid var(--negro);
+  position: relative;
+  box-shadow: 0 0 26px rgba(238, 28, 28, 0.6), 0 4px 12px rgba(0, 0, 0, 0.5);
+  animation: girar-lento 5s linear infinite;
+  overflow: hidden;
+}
+
+/* El botoncito del centro es parte del dibujo de respaldo en CSS.
+   Va en ::before (se pinta DEBAJO de la imagen personalizada) y
+   además se oculta del todo si ya hay una imagen cargada, para
+   que no queden dos "botones" encimados. */
+.pokebola-icono::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--rojo);
+  border: 3px solid var(--negro);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+.pokebola-icono:has(.pokebola-personalizada)::before {
+  display: none;
+}
+
+.pokebola-personalizada {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 1;
+  /* La imagen trae bastante margen transparente alrededor de la bola;
+     la acercamos para que llene el círculo. Ajusta este número si
+     cambias la imagen por una con menos o más margen. */
+  transform: scale(1.85);
+}
+
+@keyframes girar-lento {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.titulo {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--dorado);
+  text-shadow:
+    -2px -2px 0 var(--negro),
+     2px -2px 0 var(--negro),
+    -2px  2px 0 var(--negro),
+     2px  2px 0 var(--negro),
+     0 10px 24px rgba(0, 0, 0, 0.7);
+}
+
+.subtitulo {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dorado-suave);
+  font-weight: 700;
+  margin: 8px 0 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+
+/* =========================================
+   FORMULARIO DE BÚSQUEDA
+   Flota directo sobre el video, sin panel detrás
+   ========================================= */
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.prompt-simbolo {
+  font-family: 'Space Mono', monospace;
+  color: var(--dorado);
+  font-weight: 700;
+  font-size: 16px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+.entrada {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--borde);
+  background: var(--negro-2);
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--dorado-suave);
+  outline: none;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.entrada::placeholder {
+  color: var(--texto-tenue);
+  opacity: 0.7;
+}
+
+.entrada:focus {
+  border-color: var(--rojo-brillo);
+  box-shadow: 0 0 0 3px rgba(238, 28, 28, 0.3);
+}
+
+.boton {
+  padding: 13px 18px;
+  border: none;
+  background: linear-gradient(135deg, var(--dorado), #d9a600);
+  color: var(--negro);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55);
+  flex-shrink: 0;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.boton:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--dorado-suave), var(--dorado));
+  box-shadow: 0 10px 22px rgba(238, 28, 28, 0.4);
+}
+
+.boton:active {
+  transform: scale(0.95);
+}
+
+
+/* =========================================
+   MODAL — aquí aparece el resultado de la
+   búsqueda, encima de todo, con fondo oscuro
+   ========================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.modal-overlay:not([hidden]) {
+  display: flex;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--negro);
+  border: 2px solid var(--dorado);
+  padding: 40px 20px 26px;
+  clip-path: polygon(24px 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%, 0 24px);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.75), 0 0 50px rgba(238, 28, 28, 0.3);
+  animation: aparecer 0.22s ease;
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  border: none;
+  background: none;
+  color: var(--dorado);
+  font-size: 26px;
+  line-height: 1;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.modal-cerrar:hover {
+  color: var(--rojo-brillo);
+  transform: scale(1.15);
+}
+
+
+/* =========================================
+   ZONA DE RESULTADO (contenido dentro del modal)
+   ========================================= */
+
+.resultado {
+  min-height: 10px;
+}
+
+.estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 0 10px;
+  color: var(--texto-tenue);
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.pokebola-girando {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--rojo) 48%, var(--blanco) 48%);
+  border: 3px solid var(--negro);
+  position: relative;
+  animation: girar-lento 0.8s linear infinite;
+}
+
+.pokebola-girando::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background: var(--negro);
+  border: 3px solid var(--blanco);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.estado-error {
+  padding: 16px;
+  border-top: 3px solid var(--rojo-brillo);
+  border-bottom: 3px solid var(--rojo-brillo);
+  background: repeating-linear-gradient(135deg, rgba(238, 28, 28, 0.12) 0px, rgba(238, 28, 28, 0.12) 8px, transparent 8px, transparent 16px);
+  color: #ffb3ab;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.tarjeta-pokemon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0 6px;
+}
+
+@keyframes aparecer {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.numero-pokemon {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--dorado);
+  font-weight: 700;
+}
+
+.sprite-pokemon {
+  width: 120px;
+  height: 120px;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 8px 16px rgba(238, 28, 28, 0.45));
+}
+
+.nombre-pokemon {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--texto);
+  margin: 2px 0 4px;
+}
+
+.lista-tipos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.etiqueta-tipo {
+  padding: 5px 14px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--rojo-oscuro);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.tipo-fire     { background: #ff6b4a; }
+.tipo-water    { background: #4ea3ff; }
+.tipo-grass    { background: #5cd68a; color: #0b2213; }
+.tipo-electric { background: var(--dorado); color: #3a2e00; }
+.tipo-psychic  { background: #ff6bcb; }
+.tipo-ice      { background: #8fe0e8; color: #123; }
+.tipo-dragon   { background: #a1272c; }
+.tipo-dark     { background: #2b2b2e; }
+.tipo-fairy    { background: #ffb3d9; color: #4a1a35; }
+.tipo-normal   { background: #a8a690; color: #2a2a1a; }
+.tipo-fighting { background: #e0524a; }
+.tipo-flying   { background: #a3b6ff; color: #20264a; }
+.tipo-poison   { background: #d0399e; }
+.tipo-ground   { background: #d9b46a; color: #3a2a00; }
+.tipo-rock     { background: #c2ad7a; color: #3a2a00; }
+.tipo-bug      { background: #a6d64a; color: #233a00; }
+.tipo-ghost    { background: #3f6b6b; }
+.tipo-steel    { background: #b8c4d0; color: #1a2530; }
+
+.estadisticas {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fila-estadistica {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.nombre-estadistica {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--texto-tenue);
+  font-weight: 700;
+}
+
+.valor-estadistica {
+  color: var(--dorado);
+  font-weight: 700;
+}
+
+.barra-fondo {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.barra-relleno {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rojo), var(--dorado));
+  box-shadow: 0 0 10px rgba(238, 28, 28, 0.5);
+  transition: width 0.5s ease;
+}
+
+@media (max-width: 520px) {
+  .titulo { font-size: 34px; }
+  .flotante { width: 60px; }
+}
+
+@media (max-width: 400px) {
+  .flotante { display: none; }
+}

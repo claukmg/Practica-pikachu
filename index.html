@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi pokédex</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Space+Mono:wght@400;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+  <video class="video-fondo" autoplay muted loop playsinline onerror="this.remove()">
+    <source src="assets/fondo-pokemon.mp4" type="video/mp4">
+  </video>
+  <main class="contenedor">
+
+    <header class="encabezado">
+
+      <div class="pokebola-icono" aria-hidden="true">
+        <img src="assets/pokebola-personalizada.png" alt="" class="pokebola-personalizada" onerror="this.remove()">
+      </div>
+      <h1 class="titulo">pokédex</h1>
+      <p class="subtitulo">· busca un pokémon por nombre o número ·</p>
+    </header>
+
+    <form id="form-busqueda" class="buscador">
+      <span class="prompt-simbolo" aria-hidden="true">&gt;</span>
+      <input
+        type="text"
+        id="input-pokemon"
+        class="entrada"
+        placeholder="pikachu, 25, gengar..."
+        autocomplete="off"
+      >
+      <button type="submit" class="boton">buscar</button>
+    </form>
+
+  </main>
+
+  <div id="modal-overlay" class="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="resultado de la búsqueda">
+      <button type="button" id="modal-cerrar" class="modal-cerrar" aria-label="cerrar">&times;</button>
+      <section id="resultado" class="resultado" aria-live="polite"></section>
+    </div>
+  </div>
+
+
+  <script src="app.js"></script>
+</body>
+</html>
